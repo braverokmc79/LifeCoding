@@ -3,12 +3,31 @@ import { Component, useEffect, useState } from 'react';
 import './App.css';
 
 function App() {
+
+  const [funcShow, setFuncShow] = useState(true);
+  const [classShow, setClassShow] = useState(true);
+
   return (
     <div className="container">
       <h1>Hello World</h1>
-
-      <FuncComp initNumber={2}></FuncComp>
-      <ClassComp initNumber={2}></ClassComp>
+      <input type="button" value="show all"
+        onClick={function () {
+          setClassShow(true);
+          setFuncShow(true);
+        }}
+      />
+      <input type="button" value="remove func"
+        onClick={function () {
+          setFuncShow(false);
+        }}
+      />
+      <input type="button" value="remove class"
+        onClick={function () {
+          setClassShow(false);
+        }}
+      />
+      {funcShow ? <FuncComp initNumber={2}></FuncComp> : null}
+      {classShow ? <ClassComp initNumber={2}></ClassComp> : null}
     </div>
   );
 }
@@ -27,19 +46,24 @@ function FuncComp(props) {
 
 
   //useEffect 복수개 사용가능
-  const [number, setNumber] = useState([]);
+  const [number, setNumber] = useState(props.initNumber);
   const [_date, setDate] = useState((new Date()).toString());
-  console.log('%cfunc => render   ' + (++funcId), funStyle);
+  //console.log('%cfunc => render   ' + (++funcId), funStyle);
 
   useEffect(() => {
-    console.log('%cfunc => useEffect   A ' + (++funcId), funStyle);
-    setNumber(props.initNumber)
-  }, []);
+    console.log('%cfunc => useEffect   A  number' + (++funcId), funStyle);
+    //setNumber(props.initNumber);
+  }, [number]);
 
   useEffect(() => {
-    console.log('%cfunc => useEffect  B ' + (++funcId), funStyle);
-    document.title = number + " : " + _date;
-  }, []);
+    console.log('%cfunc => useEffect  B  _date' + (++funcId), funStyle);
+    document.title = _date;
+
+    return function () { //클린작업시 사용
+      console.log('%cfunc => useEffect  B  _date 클린작업 (componentDidMount & componentDidUpdate) ' + (++funcId), funStyle);
+    }
+
+  }, [_date]);
 
 
 
