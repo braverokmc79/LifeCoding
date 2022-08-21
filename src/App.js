@@ -55,17 +55,34 @@ class App extends Component {
             { id: this.max_content_id, title: _title, desc: _desc }
           );
 
-          this.setState({ contents: _contents });
+          this.setState({
+            contents: _contents,
+            mode: 'read',
+            selected_content_id: this.max_content_id
+          });
 
         }.bind(this)
         }
       />
     } else if (this.state.mode === "update") {
       const _content = this.getReadContent();
-      _article = <UpdateContent data={_content} />
+      _article = <UpdateContent data={_content}
 
+        onSubmit={
+          function (_id, _title, _desc) {
+
+            //map 은 깊은 복사 가능
+            const _contents = this.state.contents.map((item) => {
+              if (item.id === _id) {
+                return { id: _id, title: _title, desc: _desc };
+              } else return item;
+            });
+            this.setState({ contents: _contents, mode: "read" });
+
+          }.bind(this)
+        }
+      />
     }
-
 
     return _article;
   }
@@ -98,10 +115,14 @@ class App extends Component {
 
         <Control
           onChangeMode={function (_mode) {
-            console.log("onChangeMode", _mode);
-            this.setState({
-              mode: _mode
-            })
+
+            if (_mode === "delete") {
+              
+
+            } else {
+              this.setState({ mode: _mode });
+            }
+
           }.bind(this)}
         />
 
