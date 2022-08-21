@@ -117,12 +117,18 @@ class App extends Component {
           onChangeMode={function (_mode) {
 
             if (_mode === "delete") {
-              
+
+              if (window.confirm("정말 삭제 하시겠습니까?")) {//삭제 처리                
+                const _contents = this.state.contents.filter(n => {
+                  return n.id !== this.state.selected_content_id;
+                });
+                this.setState({ contents: _contents, mode: "welcome" });
+              }
+
 
             } else {
               this.setState({ mode: _mode });
             }
-
           }.bind(this)}
         />
 
