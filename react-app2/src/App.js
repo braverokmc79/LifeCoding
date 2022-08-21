@@ -13,8 +13,9 @@ function App() {
   );
 }
 
+let funStyle = "color:#03a9f4";
+let funcId = 0;
 function FuncComp(props) {
-
 
   // let numberState = useState(props.initNumber);
   // let number = numberState[0];
@@ -25,12 +26,20 @@ function FuncComp(props) {
   // let setDate = dateState[1];
 
 
+  //useEffect 복수개 사용가능
   const [number, setNumber] = useState([]);
+  const [_date, setDate] = useState((new Date()).toString());
+  console.log('%cfunc => render   ' + (++funcId), funStyle);
+
   useEffect(() => {
+    console.log('%cfunc => useEffect   A ' + (++funcId), funStyle);
     setNumber(props.initNumber)
   }, []);
 
-  const [_date, setDate] = useState((new Date()).toString());
+  useEffect(() => {
+    console.log('%cfunc => useEffect  B ' + (++funcId), funStyle);
+    document.title = number + " : " + _date;
+  }, []);
 
 
 
@@ -88,11 +97,11 @@ class ClassComp extends Component {
   //shouldComponentUpdate가 불린 이후에 컴포넌트 업데이트 직전에서 호출되는 메소드다.
   //새로운 props 또는 state가 반영되기 직전 새로운 값들을 받는다.
   //이 메서드 안에서 this.setState()를 사용하면 무한 루프가 일어나게 되므로 사용하면 안된다.
-  componentWillUpdate(nextProps, nextState) {
-    console.log("componentWillUpdate: " + JSON.stringify(nextProps) + " " + JSON.stringify(nextState));
-  }
+  // componentWillUpdate(nextProps, nextState) {
+  //   console.log("componentWillUpdate: " + JSON.stringify(nextProps) + " " + JSON.stringify(nextState));
+  // }
 
-  
+
 
   render() {
     console.log('%cclass => render ', classStyle);
