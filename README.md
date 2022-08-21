@@ -6,7 +6,7 @@
 
 프로젝트 디렉토리에서 다음을 실행할 수 있습니다.
 
-### `npm 시작`
+### `npm start`
 
 개발 모드에서 앱을 실행합니다.\
 브라우저에서 보려면 [http://localhost:3000](http://localhost:3000)을 엽니다.
@@ -14,12 +14,12 @@
 변경하면 페이지가 새로고침됩니다.\
 콘솔에 린트 오류가 표시될 수도 있습니다.
 
-### `npm 테스트`
+### `npm test`
 
 대화형 감시 모드에서 테스트 실행기를 시작합니다.\
 자세한 내용은 [테스트 실행](https://facebook.github.io/create-react-app/docs/running-tests) 섹션을 참조하세요.
 
-### `npm 실행 빌드`
+### `npm run build`
 
 프로덕션용 앱을 `build` 폴더에 빌드합니다.\
 프로덕션 모드에서 React를 올바르게 번들하고 최상의 성능을 위해 빌드를 최적화합니다.
@@ -29,7 +29,7 @@
 
 자세한 내용은 [배포](https://facebook.github.io/create-react-app/docs/deployment) 섹션을 참조하세요.
 
-### `npm 실행 꺼내기`
+### `npm run eject`
 
 **참고: 이것은 단방향 작업입니다. 한 번 '꺼내기'하면 되돌릴 수 없습니다!**
 
