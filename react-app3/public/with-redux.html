@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리덕스 적용</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.0/redux.min.js"></script>
+    <style>
+    .container{
+        border:5px solid black;
+        padding:10px
+    }            
+</style>
+</head>
+<body>
+    <div id="red"></div>
+<script>
+    //은행 예시 
+    //state - 은행 장부
+    //reducer - 은행 장부직원
+    //dispatch - 은행 창구직원
+    function reducer(state, action){
+        //state=>현재 store 값
+        console.log(state, action);
+        if(state===undefined){
+            return {color:"yellow"}  
+        }
+        if(action.type==="CHANGE_COLOR"){
+            //깊은 복사
+            newState=Object.assign({}, state, {color:'red'})
+        }
+        return newState
+    }
+
+
+    //초기값 생성
+    const store=Redux.createStore(reducer);
+
+    function red(){
+
+        //리덕스에서 데이터 가져오기   store.getState();
+        const state=store.getState();
+        console.log("getState" , state);
+
+
+        document.querySelector("#red").innerHTML=`
+            <div class="container" id="component_red" style="background-color:${state.color}">
+                <h1>red</h1>
+                <input type="button" value="fire"  onclick="
+                    store.dispatch({type:'CHANGE_COLOR', color:'red'})          
+                ">
+                
+            </div>
+        `;
+    }
+
+    red();  
+</script>    
+</body>
+</html>
