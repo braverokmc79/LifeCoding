@@ -15,6 +15,8 @@
 </head>
 <body>
     <div id="red"></div>
+    <div id="blue"></div>
+    <div id="green"></div>
 <script>
     //은행 예시 
     //state - 은행 장부
@@ -22,40 +24,63 @@
     //dispatch - 은행 창구직원
     function reducer(state, action){
         //state=>현재 store 값
-        console.log(state, action);
+       
         if(state===undefined){
             return {color:"yellow"}  
         }
         if(action.type==="CHANGE_COLOR"){
             //깊은 복사
-            newState=Object.assign({}, state, {color:'red'})
+            newState=Object.assign({}, state, {color:action.color})
         }
+
+        console.log(action.type, action, state, newState);
         return newState
     }
 
-
     //초기값 생성
-    const store=Redux.createStore(reducer);
+    const store=Redux.createStore(reducer,
+         window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+
 
     function red(){
-
         //리덕스에서 데이터 가져오기   store.getState();
         const state=store.getState();
-        console.log("getState" , state);
-
-
         document.querySelector("#red").innerHTML=`
             <div class="container" id="component_red" style="background-color:${state.color}">
                 <h1>red</h1>
-                <input type="button" value="fire"  onclick="
-                    store.dispatch({type:'CHANGE_COLOR', color:'red'})          
-                ">
-                
+                <input type="button" value="fire"  onclick="store.dispatch({type:'CHANGE_COLOR', color:'red'})">                
             </div>
         `;
     }
-
+    //subscribe 은 store 값이 변경되면 red 함수(여기서는 render()역할)가 호출되도록 한다.
+    store.subscribe(red);
     red();  
+
+
+   function blue(){   
+        const state=store.getState();
+        document.querySelector("#blue").innerHTML=`
+            <div class="container" id="component_blue" style="background-color:${state.color}">
+                <h1>blue</h1>
+                <input type="button" value="fire"  onclick="store.dispatch({type:'CHANGE_COLOR', color:'blue'})">                
+            </div>
+        `;
+    }
+    store.subscribe(blue);
+    blue();
+    
+    function green(){   
+        const state=store.getState();
+        document.querySelector("#green").innerHTML=`
+            <div class="container" id="component_green" style="background-color:${state.color}">
+                <h1>green</h1>
+                <input type="button" value="fire"  onclick="store.dispatch({type:'CHANGE_COLOR', color:'green'})">                
+            </div>
+        `;
+    }
+    store.subscribe(green);
+    green(); 
 </script>    
 </body>
 </html>
