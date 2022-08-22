@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/4.2.0/redux.min.js"></script>
     <title>실전 Redux</title>
 </head>
 <body>
@@ -22,11 +23,17 @@ function subject(){
     `;
 }
 function TOC(){
+    const state=store.getState();
+    const liTags= state.controls.map(item=>{
+        return `        
+         <li><a href="${item.id}">${item.title}</a></li>
+        `;
+    });
+
     document.querySelector("#toc").innerHTML=`
     <nav>
         <ol>
-            <li><a href="1.html">HTML</a></li>
-            <li><a href="2.html">CSS</a></li>            
+            ${liTags.join("")}     
         </ol>
     </nav>
     `;
@@ -49,6 +56,25 @@ function article(){
      </article>
     `;
 }
+
+function reducer(state, action){
+    if(state===undefined){
+        return{
+            controls:[
+                {id:1,title:'HTML',desc:"HTML is ..."},
+                {id:2,title:'CSS', desc:"CSS is ..."},
+                {id:3,title:'js', desc:"js is ..."}
+            ]
+        }
+    }
+    return;
+}
+
+const store=Redux.createStore(reducer);
+const state=store.getState();
+console.log("state ", state);
+
+
 subject();
 TOC();
 control();
