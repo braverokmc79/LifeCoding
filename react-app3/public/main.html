@@ -24,7 +24,7 @@ function subject(){
 }
 function TOC(){
     const state=store.getState();
-    const liTags= state.controls.map(item=>{
+    const liTags= state.contents.map(item=>{
         return `        
          <li><a href="#"
             onclick="event.preventDefault();            
@@ -49,27 +49,46 @@ function TOC(){
 function control(){
     document.querySelector("#control").innerHTML=`
         <ul>
-            <li><a href="/create">create</a></li>
-             <li><a href="/update">update</a></li>
+            <li><a 
+                onclick="
+                    event.preventDefault();
+                
+                "
+                
+                href="/create">create</a></li>
+             <li><a 
+                onclick="event.preventDefault();
+                
+                "                
+                href="/update">update</a></li>
             <li><input type="button" value="delete"></li>
         </ul>
     `;
 }
 
 function article(){
-    document.querySelector("#content").innerHTML=`
-      <article>
-        <h2>HTML</h2>
-        HTML is ...
-     </article>
-    `;
+    const state=store.getState();
+    console.log(" state", state);
+
+    if(state.selectd_id!=undefined){
+        const data=state.contents.filter(item=>{            
+            return item.id==state.selectd_id;
+        })[0]; 
+        
+        document.querySelector("#content").innerHTML=`
+            <article>
+                <h2>${data.title}</h2>
+                ${data.desc}
+            </article>
+        `;
+    }
 }
 
 function reducer(state, action){  
     if(state===undefined){
         return{
-            selectd_id:null,
-            controls:[
+            selectd_id:2,
+            contents:[
                 {id:1,title:'HTML',desc:"HTML is ..."},
                 {id:2,title:'CSS', desc:"CSS is ..."},
                 {id:3,title:'js', desc:"js is ..."}
@@ -81,21 +100,20 @@ function reducer(state, action){
     if(action.type==="SELECT"){
         //깊은 복사
        newState=Object.assign({}, state, {selectd_id:action.id});
-
     }
 
     console.log(action, state, newState);
+    return newState;
 }
 
 const store=Redux.createStore(reducer);
-const state=store.getState();
-console.log("state ", state);
-
+store.subscribe(article);
 
 subject();
 TOC();
 control();
 article();
         </script>
+        
 </body>
 </html>
