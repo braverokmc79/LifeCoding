@@ -130,6 +130,42 @@ function article(){
                     Hello, Redux!!!
                 </article>
             `;
+
+     }else if(state.mode=="update"){
+            const state=store.getState();
+            const data=state.contents.filter((item)=>{
+                return item.id===state.selectd_id;
+            })[0];
+            console.log("data ", data);
+
+            document.querySelector("#content").innerHTML=`
+             <article>    
+                <form
+                    onsubmit="
+                        event.preventDefault();
+                        const _title=this.title.value;
+                        const _desc=this.desc.value;
+                        store.dispatch({
+                            type:'UPDATE',
+                            title:_title,
+                            desc:_desc
+                        })
+                    "
+                >
+                    <p>
+                        <input type="text" name="title" placeholder="title"
+                            value="${data.title}"
+                        >
+                    </p> 
+                    <p>
+                      <textarea name="desc" placeholder="description" >${data.desc}</textarea>
+                    </p> 
+                    <p>
+                        <input type="submit">
+                    </p>   
+                </form>    
+            </article>
+        `;
     }
 
 
@@ -158,7 +194,6 @@ function reducer(state, action){
         });
 
     }else if(action.type==="CREATE_FORM" ){
-        state.mode="create";
         newState=Object.assign({}, state, {
             mode:"create"
         })
@@ -190,6 +225,31 @@ function reducer(state, action){
             contents:newContents,
             mode:'welcome'
         });
+    }else if(action.type==="UPDATE_FORM" ){
+        newState=Object.assign({}, state, {
+            mode:"update"
+        })
+    }else if(action.type==="UPDATE"){
+        console.log("UPDATE DATA : ", action);
+
+        const newContents=state.contents.map(item=>{
+            if(item.id===state.selectd_id){
+               const data={                
+                    id:state.selectd_id,
+                    title:action.title,
+                    desc:action.desc
+                };
+               return data;                
+            }else{
+                return item;
+            }
+        });
+
+        newState=Object.assign({}, state, {
+            contents:newContents,
+            mode:'read',            
+        });
+        
     }
 
     console.log(action, state, newState);
