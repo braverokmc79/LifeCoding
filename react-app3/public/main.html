@@ -26,7 +26,15 @@ function TOC(){
     const state=store.getState();
     const liTags= state.controls.map(item=>{
         return `        
-         <li><a href="${item.id}">${item.title}</a></li>
+         <li><a href="#"
+            onclick="event.preventDefault();            
+            const action={
+                type:'SELECT', 
+                id:${item.id}
+            }
+            store.dispatch(action);
+            "
+            href="${item.id}">${item.title}</a></li>
         `;
     });
 
@@ -57,9 +65,10 @@ function article(){
     `;
 }
 
-function reducer(state, action){
+function reducer(state, action){  
     if(state===undefined){
         return{
+            selectd_id:null,
             controls:[
                 {id:1,title:'HTML',desc:"HTML is ..."},
                 {id:2,title:'CSS', desc:"CSS is ..."},
@@ -67,7 +76,15 @@ function reducer(state, action){
             ]
         }
     }
-    return;
+
+    let newState={};
+    if(action.type==="SELECT"){
+        //깊은 복사
+       newState=Object.assign({}, state, {selectd_id:action.id});
+
+    }
+
+    console.log(action, state, newState);
 }
 
 const store=Redux.createStore(reducer);
@@ -80,12 +97,5 @@ TOC();
 control();
 article();
         </script>
-   
-
-
-      
-  
-
-  
 </body>
 </html>
