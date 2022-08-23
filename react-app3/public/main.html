@@ -47,6 +47,8 @@ function TOC(){
     `;
 }
 function control(){
+    const state=store.getState();
+
     document.querySelector("#control").innerHTML=`
         <ul>
             <li><a 
@@ -68,30 +70,62 @@ function control(){
 
 function article(){
     const state=store.getState();
-    console.log(" state", state);
 
-    if(state.selectd_id!=undefined){
-        const data=state.contents.filter(item=>{            
-            return item.id==state.selectd_id;
-        })[0]; 
-        
+
+    if(state.mode==="create"){
         document.querySelector("#content").innerHTML=`
-            <article>
-                <h2>${data.title}</h2>
-                ${data.desc}
+             <article>    
+                <form
+                    onsubmit="
+                        event.preventDefault();
+                        const _title=this.title.value;
+                        const _desc=this.desc.value;
+                        store.dispatch({
+                            type:'CREATE',
+                            title:_title,
+                            desc:_desc
+                        })
+                    "
+                >
+                    <p>
+                        <input type="text" name="title" placeholder="title">
+                    </p> 
+                    <p>
+                      <textarea name="desc" placeholder="description"></textarea>
+                    </p> 
+                    <p>
+                        <input type="submit">
+                    </p>   
+                </form>    
             </article>
         `;
+
+    }else if(state.mode==="read"){
+        
+            const data=state.contents.filter(item=>{            
+                return item.id==state.selectd_id;
+            })[0];             
+            document.querySelector("#content").innerHTML=`
+                <article>
+                    <h2>${data.title}</h2>
+                    ${data.desc}
+                </article>
+            `;
     }
+
+
 }
 
 function reducer(state, action){  
     if(state===undefined){
         return{
+            max_id:3,
+            mode:'create',
             selectd_id:2,
             contents:[
-                {id:1,title:'HTML',desc:"HTML is ..."},
-                {id:2,title:'CSS', desc:"CSS is ..."},
-                {id:3,title:'js', desc:"js is ..."}
+                {id:1,title:'HTML',desc:'HTML is ...'},
+                {id:2,title:'CSS', desc:'CSS is ...'},
+                {id:3,title:'js', desc:'js is ...'}
             ]
         }
     }
@@ -100,6 +134,23 @@ function reducer(state, action){
     if(action.type==="SELECT"){
         //깊은 복사
        newState=Object.assign({}, state, {selectd_id:action.id});
+    }else if(action.type==="CREATE"){
+        //concat() 을 하면 복제 처리 된다.
+        let newMaxId=state.max_id+1;
+        let newContents=state.contents.concat();
+        newContents.push({
+            id:newMaxId,
+            title:action.title,          
+            desc:action.desc
+        });
+
+        newState=Object.assign({}, state, {
+            max_id:newMaxId,
+            contents:newContents,
+            selectd_id:newMaxId,
+            mode:'read'
+        });
+
     }
 
     console.log(action, state, newState);
@@ -108,6 +159,7 @@ function reducer(state, action){
 
 const store=Redux.createStore(reducer);
 store.subscribe(article);
+store.subscribe(TOC);
 
 subject();
 TOC();
