@@ -54,16 +54,26 @@ function control(){
             <li><a 
                 onclick="
                     event.preventDefault();
-                
+                    store.dispatch({
+                        type:'CREATE_FORM'
+                    })
                 "
                 
                 href="/create">create</a></li>
              <li><a 
                 onclick="event.preventDefault();
-                
+                    store.dispatch({
+                        type:'UPDATE_FORM'
+                    })
                 "                
                 href="/update">update</a></li>
-            <li><input type="button" value="delete"></li>
+            <li><input type="button"
+                onclick="event.preventDefault();
+                    store.dispatch({
+                        type:'DELETE'                        
+                    })
+                "
+                value="delete"></li>
         </ul>
     `;
 }
@@ -111,6 +121,15 @@ function article(){
                     ${data.desc}
                 </article>
             `;
+
+
+    }else if(state.mode=="welcome"){
+           document.querySelector("#content").innerHTML=`
+                <article>
+                    <h2>Welcome</h2>
+                    Hello, Redux!!!
+                </article>
+            `;
     }
 
 
@@ -120,7 +139,7 @@ function reducer(state, action){
     if(state===undefined){
         return{
             max_id:3,
-            mode:'create',
+            mode:'welcome',
             selectd_id:2,
             contents:[
                 {id:1,title:'HTML',desc:'HTML is ...'},
@@ -133,7 +152,16 @@ function reducer(state, action){
     let newState={};
     if(action.type==="SELECT"){
         //깊은 복사
-       newState=Object.assign({}, state, {selectd_id:action.id});
+       newState=Object.assign({}, state, {
+            mode:"read",
+            selectd_id:action.id
+        });
+
+    }else if(action.type==="CREATE_FORM" ){
+        state.mode="create";
+        newState=Object.assign({}, state, {
+            mode:"create"
+        })
     }else if(action.type==="CREATE"){
         //concat() 을 하면 복제 처리 된다.
         let newMaxId=state.max_id+1;
@@ -151,6 +179,17 @@ function reducer(state, action){
             mode:'read'
         });
 
+    }else if(action.type==="DELETE"){
+      
+        const newContents=state.contents.filter((item)=>{
+            return item.id !=state.selectd_id;
+        });
+        //console.log("_contents ", _contents);
+
+        newState=Object.assign({}, state, {
+            contents:newContents,
+            mode:'welcome'
+        });
     }
 
     console.log(action, state, newState);
